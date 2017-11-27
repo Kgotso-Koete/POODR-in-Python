@@ -1,12 +1,12 @@
-from collections import namedtuple
+import math
 
+#simplifying Gear so it does not do Wheel's job
 class Gear:
 	# initialize
-	def __init__(self, chainring, cog, rim, tire):
+	def __init__(self, chainring, cog, wheel = None):
 		self.__chainring = chainring
 		self.__cog = cog
-		# creating a wheel struct within Gear
-		self.__wheel = self.Wheel(rim, tire)
+		self.__wheel = wheel
 
 	# getter methods to keep initialized variables private
 	@property
@@ -21,57 +21,44 @@ class Gear:
 	def wheel(self):
 		return self.__wheel
 
-	# calculate the ratio
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
-	class Wheel(namedtuple('Wheel', ['rim', 'tire'])):
-		def diameter(self):
-			return self.rim + (self.tire * 2)
-	#gear inches now has one job to do
+	# gear_inches gave the 'diameter' method to Wheel to execute
 	def gear_inches(self):
-		return self.ratio() * self.wheel.diameter()
+		return self.ratio() * wheel.diameter
 
-# creating a new data structure to align internal and external data structures
-class RevealingReferences(object):
-#initialize
-	def __init__(self, data):
-		self.wheels = data
+# Wheel now a seperate class with its own job
+class Wheel:
+	# initialize
+	def __init__(self, rim, tire):
+		self.__rim = rim
+		self.__tire = tire
 
-	#getter methed
 	@property
-	def wheels(self):
-		return self.__wheels
+	def rim(self):
+		return self.__rim
 
-	#creating custom struct (named tuple)
-	Wheel = namedtuple('Wheel',['rim','tire'])
+	@property
+	def tire(self):
+		return self.__tire
 
-	#set variables by iterating over 2D array
-	@wheels.setter
-	def wheels(self, ext_data_struct):
-		self.__wheels = [self.Wheel(cell[0], cell[1]) for cell in ext_data_struct]
+	def diameter(self):
+		return self.rim + (self.tire * 2)
 
-	#diameter has one job to do. Calculate diameters
-	def diameter(self, wheel):
-		return wheel.rim + (wheel.tire * 2)
-
-	#return an array of diameters for each wheel in 2D arry
-	def diameters(self):
-		return [self.diameter(wheel) for wheel in self.wheels]
+	def circumference(self):
+		return math.pi * self.diameter()
 
 if __name__ == '__main__':
 	#initialize
-	test_gear_1 = Gear( 52 , 11 , 26 , 1.5)
-	test_gear_2 = Gear( 52 , 11 , 24 , 1.25)
-
-	print("Test gear inches methods...")
-	print(test_gear_1.gear_inches())
-	# -> 137.090909090909
-	print(test_gear_2.gear_inches())
-	# -> 125.272727272727
+	test_wheel = Wheel( 26 , 1.5)
+	print("Test wheel methods...")
+	print(test_wheel.circumference())
+	# -> 91.106186954104
 
 	print()
-
-	print("Test revealing preferences method...")
-	wheel_set = RevealingReferences([[ 622 , 20 ], [ 622 , 23 ], [ 559 , 30 ], [ 559 , 40 ]])
-	print(wheel_set.diameters())
+	test_gear_1 = Gear( 52 , 11 ,test_wheel)
+	# -> 137.090909090909
+	test_gear_2 = Gear( 52 , 11)
+	# -> 4.72727272727273
+	print(test_gear_2.ratio())
