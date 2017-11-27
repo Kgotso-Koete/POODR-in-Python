@@ -5,8 +5,8 @@ class Gear:
 	def __init__(self, chainring, cog, rim, tire):
 		self.__chainring = chainring
 		self.__cog = cog
-		self.__rim = rim
-		self.__tire = tire
+		# creating a wheel struct within Gear
+		self.__wheel = self.Wheel(rim, tire)
 
 	# getter methods to keep initialized variables private
 	@property
@@ -18,25 +18,19 @@ class Gear:
 		return self.__cog
 
 	@property
-	def rim(self):
-		return self.__rim
-
-	@property
-	def tire(self):
-		return self.__tire
+	def wheel(self):
+		return self.__wheel
 
 	# calculate the ratio
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
+	class Wheel(namedtuple('Wheel', ['rim', 'tire'])):
+		def diameter(self):
+			return self.rim + (self.tire * 2)
 	#gear inches now has one job to do
 	def gear_inches(self):
-		return self.ratio() * self.diameter()
-
-	#diameter sends messages to gear inches
-	def diameter(self):
-		return self.rim + (self.tire * 2)
-
+		return self.ratio() * self.wheel.diameter()
 
 # creating a new data structure to align internal and external data structures
 class RevealingReferences(object):
