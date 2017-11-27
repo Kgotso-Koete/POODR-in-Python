@@ -1,4 +1,4 @@
-import collections
+from collections import namedtuple
 
 class Gear:
 	# initialize
@@ -29,9 +29,14 @@ class Gear:
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
-	# calculate gear inches
+	#gear inches now has one job to do
 	def gear_inches(self):
-		return self.ratio() * (self.rim + (self.tire * 2))
+		return self.ratio() * self.diameter()
+
+	#diameter sends messages to gear inches
+	def diameter(self):
+		return self.rim + (self.tire * 2)
+
 
 # creating a new data structure to align internal and external data structures
 class RevealingReferences(object):
@@ -45,7 +50,7 @@ class RevealingReferences(object):
 		return self.__wheels
 
 	#creating custom struct (named tuple)
-	Wheel = collections.namedtuple('Wheel',['rim','tire'])
+	Wheel = namedtuple('Wheel',['rim','tire'])
 
 	#set variables by iterating over 2D array
 	@wheels.setter
