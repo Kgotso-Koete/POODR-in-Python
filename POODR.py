@@ -52,22 +52,27 @@ class RevealingReferences(object):
 	def wheels(self, ext_data_struct):
 		self.__wheels = [self.Wheel(cell[0], cell[1]) for cell in ext_data_struct]
 
+	#diameter has one job to do. Calculate diameters
+	def diameter(self, wheel):
+		return wheel.rim + (wheel.tire * 2)
+
 	#return an array of diameters for each wheel in 2D arry
 	def diameters(self):
-		return [wheel.rim + (wheel.tire * 2) for wheel in self.wheels]
+		return [self.diameter(wheel) for wheel in self.wheels]
 
-#initialize
-test_gear_1 = Gear( 52 , 11 , 26 , 1.5)
-test_gear_2 = Gear( 52 , 11 , 24 , 1.25)
+if __name__ == '__main__':
+	#initialize
+	test_gear_1 = Gear( 52 , 11 , 26 , 1.5)
+	test_gear_2 = Gear( 52 , 11 , 24 , 1.25)
 
-print("Test gear inches methods...")
-print(test_gear_1.gear_inches())
-# -> 137.090909090909
-print(test_gear_2.gear_inches())
-# -> 125.272727272727
+	print("Test gear inches methods...")
+	print(test_gear_1.gear_inches())
+	# -> 137.090909090909
+	print(test_gear_2.gear_inches())
+	# -> 125.272727272727
 
-print()
+	print()
 
-print("Test revealing preferences method...")
-wheel_set = RevealingReferences([[ 622 , 20 ], [ 622 , 23 ], [ 559 , 30 ], [ 559 , 40 ]])
-print(wheel_set.diameters())
+	print("Test revealing preferences method...")
+	wheel_set = RevealingReferences([[ 622 , 20 ], [ 622 , 23 ], [ 559 , 30 ], [ 559 , 40 ]])
+	print(wheel_set.diameters())
