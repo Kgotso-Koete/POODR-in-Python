@@ -1,14 +1,13 @@
 from collections import namedtuple
 import math
 
-#simplifying Gear so it does not do Wheel's job
+# creating flexible arguments to Gear class
 class Gear:
 	# initialize
-	def __init__(self, chainring, cog, rim, tire):
-		self.__chainring = chainring
-		self.__cog = cog
-		self.__rim = rim
-		self.__tire = tire
+	def __init__(self, **kwargs):
+		self.__chainring = kwargs['chainring']
+		self.__cog = kwargs['cog']
+		self.__wheel = kwargs['wheel']
 
 	# getter methods to keep initialized variables private
 	@property
@@ -20,17 +19,8 @@ class Gear:
 		return self.__cog
 
 	@property
-	def rim(self):
-		return self.__rim
-
-	@property
-	def tire(self):
-		return self.__tire
-
-	# Lazily create wheel only when invoked by gear_inches func
-	@property
 	def wheel(self):
-		return Wheel(self.rim, self.tire)
+		return self.__wheel
 
 	def ratio(self):
 		return self.chainring / float(self.cog)
@@ -61,7 +51,7 @@ class Wheel:
 		return math.pi * diameter
 
 if __name__ == '__main__':
-	## Gear expects a 'Duck' that knows 'diameter'
-	new_gear = Gear(52, 11 , 26, 1.5)
+	## Gear expects variable number of key word arguments
+	new_gear = Gear(chainring=52, cog=11, wheel=Wheel(26, 1.5))
 	#expect -----> 137.0909090909091
 	print(new_gear.gear_inches())
