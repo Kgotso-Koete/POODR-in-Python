@@ -4,10 +4,11 @@ import math
 #simplifying Gear so it does not do Wheel's job
 class Gear:
 	# initialize
-	def __init__(self, chainring, cog, wheel):
+	def __init__(self, chainring, cog, rim, tire):
 		self.__chainring = chainring
 		self.__cog = cog
-		self.__wheel = wheel
+		# instance of wheel moved to initialization from gear_inches method
+		self.__wheel = Wheel(rim, tire)
 
 	# getter methods to keep initialized variables private
 	@property
@@ -52,5 +53,6 @@ class Wheel:
 
 if __name__ == '__main__':
 	## Gear expects a 'Duck' that knows 'diameter'
-	new_gear = Gear(52, 11 , Wheel(26, 1.5))
+	new_gear = Gear(52, 11 , 26, 1.5)
+	#expect -----> 137.0909090909091
 	print(new_gear.gear_inches())
