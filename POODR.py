@@ -7,8 +7,8 @@ class Gear:
 	def __init__(self, chainring, cog, rim, tire):
 		self.__chainring = chainring
 		self.__cog = cog
-		# instance of wheel moved to initialization from gear_inches method
-		self.__wheel = Wheel(rim, tire)
+		self.__rim = rim
+		self.__tire = tire
 
 	# getter methods to keep initialized variables private
 	@property
@@ -20,8 +20,17 @@ class Gear:
 		return self.__cog
 
 	@property
+	def rim(self):
+		return self.__rim
+
+	@property
+	def tire(self):
+		return self.__tire
+
+	# Lazily create wheel only when invoked by gear_inches func
+	@property
 	def wheel(self):
-		return self.__wheel
+		return Wheel(self.rim, self.tire)
 
 	def ratio(self):
 		return self.chainring / float(self.cog)
