@@ -1,12 +1,12 @@
 from collections import namedtuple
 import math
 
-# creating flexible arguments to Gear class
+# create default values for key word arguments
 class Gear:
 	# initialize
 	def __init__(self, **kwargs):
-		self.__chainring = kwargs['chainring']
-		self.__cog = kwargs['cog']
+		self.__chainring = kwargs.get('chainring', 40)
+		self.__cog = kwargs.get('cog', 40)
 		self.__wheel = kwargs['wheel']
 
 	# getter methods to keep initialized variables private
@@ -52,6 +52,6 @@ class Wheel:
 
 if __name__ == '__main__':
 	## Gear expects variable number of key word arguments
-	new_gear = Gear(chainring=52, cog=11, wheel=Wheel(26, 1.5))
+	new_gear = Gear(wheel=Wheel(26, 1.5))
 	#expect -----> 137.0909090909091
 	print(new_gear.gear_inches())
