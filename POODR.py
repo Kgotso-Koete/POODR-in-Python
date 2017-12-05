@@ -1,9 +1,10 @@
+from collections import namedtuple
 import math
 
 #simplifying Gear so it does not do Wheel's job
 class Gear:
 	# initialize
-	def __init__(self, chainring, cog, wheel = None):
+	def __init__(self, chainring, cog, wheel):
 		self.__chainring = chainring
 		self.__cog = cog
 		self.__wheel = wheel
@@ -26,7 +27,7 @@ class Gear:
 
 	# gear_inches gave the 'diameter' method to Wheel to execute
 	def gear_inches(self):
-		return self.ratio() * wheel.diameter
+		return self.ratio() * self.wheel.diameter()
 
 # Wheel now a seperate class with its own job
 class Wheel:
@@ -47,18 +48,9 @@ class Wheel:
 		return self.rim + (self.tire * 2)
 
 	def circumference(self):
-		return math.pi * self.diameter()
+		return math.pi * diameter
 
 if __name__ == '__main__':
-	#initialize
-	test_wheel = Wheel( 26 , 1.5)
-	print("Test wheel methods...")
-	print(test_wheel.circumference())
-	# -> 91.106186954104
-
-	print()
-	test_gear_1 = Gear( 52 , 11 ,test_wheel)
-	# -> 137.090909090909
-	test_gear_2 = Gear( 52 , 11)
-	# -> 4.72727272727273
-	print(test_gear_2.ratio())
+	## Gear expects a 'Duck' that knows 'diameter'
+	new_gear = Gear(52, 11 , Wheel(26, 1.5))
+	print(new_gear.gear_inches())
