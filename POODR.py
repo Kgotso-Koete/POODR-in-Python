@@ -4,10 +4,10 @@ import math
 # create default values for key word arguments
 class Gear:
 	# initialize
-	def __init__(self, **kwargs):
-		self.__chainring = kwargs.get('chainring', 40)
-		self.__cog = kwargs.get('cog', 40)
-		self.__wheel = kwargs['wheel']
+	def __init__(self, chainring, cog, wheel):
+		self.__chainring = chainring
+		self.__cog = cog
+		self.__wheel = wheel
 
 	# getter methods to keep initialized variables private
 	@property
@@ -50,8 +50,10 @@ class Wheel:
 	def circumference(self):
 		return math.pi * diameter
 
+'''
 if __name__ == '__main__':
 	## Gear expects variable number of key word arguments
 	new_gear = Gear(wheel=Wheel(26, 1.5))
 	#expect -----> 137.0909090909091
 	print(new_gear.gear_inches())
+'''
