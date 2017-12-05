@@ -1,13 +1,12 @@
-from collections import namedtuple
-import math
+'''
+Moving methods from Gear to Wheel
+'''
 
-# create default values for key word arguments
 class Gear:
 	# initialize
-	def __init__(self, chainring, cog, wheel):
+	def __init__(self, chainring, cog):
 		self.__chainring = chainring
 		self.__cog = cog
-		self.__wheel = wheel
 
 	# getter methods to keep initialized variables private
 	@property
@@ -18,23 +17,19 @@ class Gear:
 	def cog(self):
 		return self.__cog
 
-	@property
-	def wheel(self):
-		return self.__wheel
-
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
-	# gear_inches gave the 'diameter' method to Wheel to execute
-	def gear_inches(self):
-		return self.ratio() * self.wheel.diameter()
+	def gear_inches(self, diameter):
+		return self.ratio() * diameter
 
-# Wheel now a seperate class with its own job
+# Wheel now has the diameter method and initializes Gear
 class Wheel:
 	# initialize
-	def __init__(self, rim, tire):
+	def __init__(self, rim, tire, chainring, cog):
 		self.__rim = rim
 		self.__tire = tire
+		self.__gear = Gear(chainring, cog)
 
 	@property
 	def rim(self):
@@ -44,16 +39,19 @@ class Wheel:
 	def tire(self):
 		return self.__tire
 
+	@property
+	def gear(self):
+		return self.__gear
+
 	def diameter(self):
 		return self.rim + (self.tire * 2)
 
-	def circumference(self):
-		return math.pi * diameter
+	def gear_inches(self):
+		return self.gear.gear_inches(self.diameter())
 
-'''
+
 if __name__ == '__main__':
-	## Gear expects variable number of key word arguments
-	new_gear = Gear(wheel=Wheel(26, 1.5))
+	## create new instance of Wheel
+	new_wheel = Wheel( 26 , 1.5, 52 , 11 )
 	#expect -----> 137.0909090909091
-	print(new_gear.gear_inches())
-'''
+	print(new_wheel.gear_inches())
