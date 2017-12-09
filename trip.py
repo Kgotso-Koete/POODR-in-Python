@@ -1,23 +1,35 @@
 '''
-Creating a Trip and Bike class without Duck Types
+Create new TripCoordinator and Driver classes and\
+give them the behavior for which they are responsible.
 '''
-
-class Trip:
-	def __init__(self, bicycles, customers, vehicle):
+#Trip preparation becomes more complicated
+class Trip(object):
+	def __init__(self, bicycles, customers, vehicles):
 		self.bicycles = bicycles
 		self.customers = customers
-		self.vehicle = vehicle
+		self.vehicles = vehicles
 
-	# mechanic coulc be from any class
-	def prepare(mechanic):
-		return mechanic.prepare_bicycles(bicycles)
+	# prepare trandport mode depending on instance
+	def prepare(self, preparers):
+		for preparer in preparers:
+			if isinstance(preparer, Mechanic):
+				preparer.prepare_bicycles(self.bicycles)
+			elif isinstance(preparer, TripCoordinator):
+				preparer.buy_food(self.customers)
+			elif isinstance(preparer, Driver):
+				preparer.gas_up(self.vehicle)
+				preparer.fill_water_tank(self.vehicle)
 
-class Mechanic:
-	def prepare_all_bicycles(bicycles):
-		return [prepare_each_bicycle(bicycle) for each bicycle in bicycles]
+# when you introduce TripCoordinator and Driver
+class TripCoordinator(object):
+	def buy_food(self, customers):
+		pass
 
-	def prepare_each_bicycle(bicycle):
-		# some definition of preperation
+class Driver(object):
+	def gas_up(self, vehicle):
+		pass
+	def fill_water_tank(self, vehicle):
+		pass
 
 if __name__ == '__main__':
 	#create an instance
