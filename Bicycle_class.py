@@ -14,7 +14,7 @@ class Bicycle(object):
 
 	@staticmethod
 	def default_tire_size(self):
-		raise NotImplementedError
+		raise NotImplementedError("This",self.__class__.__name__, "can not respond to :",self.default_tire_size.__name__ )
 
 	@property
 	def size(self):
