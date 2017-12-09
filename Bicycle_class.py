@@ -1,5 +1,6 @@
 '''
-Creating RecumbentBike Class without __init__ overide
+Making Bike responsible for initializing variables
+**PLEASE NOTE, CONTAINS ERRORS
 '''
 
 class Bicycle(object):
@@ -8,13 +9,17 @@ class Bicycle(object):
 		self.__chain = kwargs.get('chain', self.default_chain(self))
 		self.__tire_size = kwargs.get('tire_size', self.default_tire_size(self))
 
+	@classmethod
+	def post_initialize(self,**kwargs): # Bicycle both sends
+		return self.post_initialize(**kwargs)
+
+	@staticmethod
+	def post_initialize(self,**kwargs): # And implements this
+		return None
+
 	@staticmethod
 	def default_chain(self):
 		return '10-speed'
-
-	@staticmethod
-	def default_tire_size(self):
-		raise NotImplementedError("This",self.__class__.__name__,"can not respond to :",self.default_tire_size.__name__ )
 
 	@property
 	def size(self):
@@ -32,9 +37,9 @@ class Bicycle(object):
 		return {'tire_size': self.tire_size, 'chain':self.chain}
 
 class RoadBike(Bicycle):
-	def __init__(self,**kwargs):
-		Bicycle.__init__(self,**kwargs) # <- RoadBike now MUST send
+	def post_initialize(self,**kwargs): # RoadBike can optionally overide this
 		self.__tape_color = kwargs.get('tape_color', None)
+		# RoadBike can optionally overide this
 
 	@staticmethod
 	def default_tire_size(self):
@@ -48,53 +53,13 @@ class RoadBike(Bicycle):
 		add_spare = {'tape_color': self.tape_color}
 		return {**super().spares(), **add_spare}
 
-class MountainBike(Bicycle):
-	def __init__(self,**kwargs):
-		Bicycle.__init__(self,**kwargs)
-		self.__front_shock = kwargs['front_shock']
-		self.__rear_shock = kwargs['rear_shock']
-
-	@staticmethod
-	def default_tire_size(self):
-		return '2.1'
-
-	@property
-	def front_shock(self):
-		return self.__front_shock
-
-	@property
-	def rear_shock(self):
-		return self.__rear_shock
-
-	def spares(self):
-		add_spare = {'front_shock':self.front_shock, 'rear_shock': self.rear_shock}
-		return {**super().spares(), **add_spare}
-
-class RecumbentBike(Bicycle):
-	def __init__(self,**kwargs):
-		self.__flag = kwargs['flag']
-
-	@property
-	def flag(self):
-		return self.__flag
-
-	@staticmethod
-	def default_chain(self):
-		return '9-speed'
-
-	@staticmethod
-	def default_tire_size(self):
-		return '28'
-
-	def spares(self):
-		add_spare = {'flag':self.flag}
-		return {**super().spares(), **add_spare}
-
-
 if __name__ == '__main__':
-	# initialize a new bike
-	bent = RecumbentBike(flag = 'tall and orange')
-	print(bent.size)
-	# -> {:tire_size => nil, <- didn't get initialized
-	#     :chain     => nil,
-	#     :flag      => "tall and orange"}
+	# initialize
+	road_bike = RoadBike(
+              size = 'M',
+              tape_color = 'red')
+
+	print(road_bike.spares())
+	# -> {:tire_size   => "23",
+	#     :chain       => "10-speed",
+	#     :tape_color  => "red"}
