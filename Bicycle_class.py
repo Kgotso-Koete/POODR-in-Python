@@ -1,5 +1,5 @@
 '''
-Error handling for sub-classes that do not implement templates
+Promoting the spares method to Bicycle
 '''
 
 class Bicycle(object):
@@ -28,6 +28,9 @@ class Bicycle(object):
 	def tire_size(self):
 		return self.__tire_size
 
+	def spares(self):
+		return {'tire_size': self.tire_size, 'chain':self.chain}
+
 class RoadBike(Bicycle):
 	def __init__(self,**kwargs):
 		Bicycle.__init__(self,**kwargs) # <- RoadBike now MUST send
@@ -42,7 +45,8 @@ class RoadBike(Bicycle):
 		return self.__tape_color
 
 	def spares(self):
-		return {'chain': self.chain , 'tire_size': self.tire_size , 'tape_color': self.tape_color}
+		add_spare = {'tape_color': self.tape_color}
+		return {**super().spares(), **add_spare}
 
 class MountainBike(Bicycle):
 	def __init__(self,**kwargs):
@@ -72,9 +76,17 @@ class RecumbentBike(Bicycle):
 		return '9-speed'
 
 
-
 if __name__ == '__main__':
 	# initialize a new bike
-	bent = RecumbentBike()
-	print(bent)
-	# NameError: undefined local variable or method
+	road_bike = RoadBike(
+	size = 'M',
+	tape_color = 'red' )
+
+	print(road_bike.spares())
+
+	mountain_bike = MountainBike(
+	size = 'S',
+	front_shock = 'Manitou',
+	rear_shock = 'Fox')
+
+	print(mountain_bike.spares())
