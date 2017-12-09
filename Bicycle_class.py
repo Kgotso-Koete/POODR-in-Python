@@ -1,5 +1,5 @@
 '''
-Adding RecumbentBike class
+Error handling for sub-classes that do not implement templates
 '''
 
 class Bicycle(object):
@@ -11,6 +11,10 @@ class Bicycle(object):
 	@staticmethod
 	def default_chain(self):
 		return '10-speed'
+
+	@staticmethod
+	def default_tire_size(self):
+		raise NotImplementedError
 
 	@property
 	def size(self):
@@ -67,9 +71,10 @@ class RecumbentBike(Bicycle):
 	def default_chain(self):
 		return '9-speed'
 
+
+
 if __name__ == '__main__':
 	# initialize a new bike
 	bent = RecumbentBike()
 	print(bent)
 	# NameError: undefined local variable or method
-	#   `default_tire_size'
