@@ -1,8 +1,11 @@
 '''
-First attempt at a Bicycle sub-class
+Moving all Bicycle responsibilities to new sub-class RoadBike
 '''
 
 class Bicycle(object):
+	pass
+
+class RoadBike(Bicycle):
 	def __init__(self,**kwargs):
 		self.__size = kwargs['size']
 		self.__tape_color = kwargs.get('tape_color', None)
@@ -39,16 +42,17 @@ class MountainBike(Bicycle):
 
 if __name__ == '__main__':
 	# initialize a new bike
+	road_bike = RoadBike(
+	size = 'M',
+	tape_color = 'red' )
+
+	print(road_bike.size)
+	# => "M"
+
 	mountain_bike = MountainBike(
-                  size = 'S',
-                  front_shock = 'Manitou',
-                  rear_shock = 'Fox')
+	size = 'S',
+	front_shock = 'Manitou',
+	rear_shock = 'Fox')
 
 	print(mountain_bike.size)
-	 # -> 'S')
-	print(mountain_bike.spares())
-	# -> {:tire_size   => "23",       <- wrong!
-	#     :chain       => "10-speed",
-	#     :tape_color  => nil,        <- not applicable
-	#     :front_shock => 'Manitou',
-	#     :rear_shock  => "Fox"}
+	# NoMethodError: undefined method `size
