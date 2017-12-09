@@ -9,27 +9,26 @@ class Trip(object):
 		self.customers = customers
 		self.vehicles = vehicles
 
-	# prepare trandport mode depending on instance
-	def prepare(self, preparers):
+	# prepare each prerarer
+	def prepare(preparers):
 		for preparer in preparers:
-			if isinstance(preparer, Mechanic):
-				preparer.prepare_bicycles(self.bicycles)
-			elif isinstance(preparer, TripCoordinator):
-				preparer.buy_food(self.customers)
-			elif isinstance(preparer, Driver):
-				preparer.gas_up(self.vehicle)
-				preparer.fill_water_tank(self.vehicle)
+			preparer.prepare_trip()
 
-# when you introduce TripCoordinator and Driver
+# when every preparer is a Duck that responds to 'prepare_trip'
+class Mechanic(object):
+	def prepare_trip(trip):
+		return [prepar_bicycle(bicycle) for bicycle in trip.bicycles]
+
 class TripCoordinator(object):
-	def buy_food(self, customers):
-		pass
+	def prepare_trip(trip):
+		return buy_food(trip.customers)
 
 class Driver(object):
-	def gas_up(self, vehicle):
-		pass
-	def fill_water_tank(self, vehicle):
-		pass
+	def prepare_trip(trip):
+		vehicle = trip.vehicle
+		gas_up(vehicle)
+		fill_water_tank(vehicle)
+		return vehicle
 
 if __name__ == '__main__':
 	#create an instance
