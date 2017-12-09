@@ -1,18 +1,19 @@
 '''
-Moving all Bicycle responsibilities to new sub-class RoadBike
+Promoting size behavior to Bicycle superclass 
 '''
 
 class Bicycle(object):
-	pass
-
-class RoadBike(Bicycle):
 	def __init__(self,**kwargs):
 		self.__size = kwargs['size']
-		self.__tape_color = kwargs.get('tape_color', None)
 
 	@property
 	def size(self):
 		return self.__size
+
+class RoadBike(Bicycle):
+	def __init__(self,**kwargs):
+		Bicycle.__init__(self,**kwargs) # <- RoadBike now MUST send
+		self.__tape_color = kwargs.get('tape_color', None)
 
 	@property
 	def tape_color(self):
