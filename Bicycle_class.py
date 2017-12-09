@@ -1,5 +1,5 @@
 '''
-Promoting the spares method to Bicycle
+Creating RecumbentBike Class without __init__ overide
 '''
 
 class Bicycle(object):
@@ -14,7 +14,7 @@ class Bicycle(object):
 
 	@staticmethod
 	def default_tire_size(self):
-		raise NotImplementedError("This",self.__class__.__name__, "can not respond to :",self.default_tire_size.__name__ )
+		raise NotImplementedError("This",self.__class__.__name__,"can not respond to :",self.default_tire_size.__name__ )
 
 	@property
 	def size(self):
@@ -71,22 +71,30 @@ class MountainBike(Bicycle):
 		return {**super().spares(), **add_spare}
 
 class RecumbentBike(Bicycle):
+	def __init__(self,**kwargs):
+		self.__flag = kwargs['flag']
+
+	@property
+	def flag(self):
+		return self.__flag
+
 	@staticmethod
 	def default_chain(self):
 		return '9-speed'
 
+	@staticmethod
+	def default_tire_size(self):
+		return '28'
+
+	def spares(self):
+		add_spare = {'flag':self.flag}
+		return {**super().spares(), **add_spare}
+
 
 if __name__ == '__main__':
 	# initialize a new bike
-	road_bike = RoadBike(
-	size = 'M',
-	tape_color = 'red' )
-
-	print(road_bike.spares())
-
-	mountain_bike = MountainBike(
-	size = 'S',
-	front_shock = 'Manitou',
-	rear_shock = 'Fox')
-
-	print(mountain_bike.spares())
+	bent = RecumbentBike(flag = 'tall and orange')
+	print(bent.size)
+	# -> {:tire_size => nil, <- didn't get initialized
+	#     :chain     => nil,
+	#     :flag      => "tall and orange"}
