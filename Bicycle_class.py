@@ -1,10 +1,10 @@
 '''
-Using staticmethod as default values that can be called in __init__ (before initializing)
+Adding RecumbentBike class
 '''
 
 class Bicycle(object):
 	def __init__(self,**kwargs):
-		self.__size = kwargs['size']
+		self.__size = kwargs.get('size', None)
 		self.__chain = kwargs.get('chain', self.default_chain(self))
 		self.__tire_size = kwargs.get('tire_size', self.default_tire_size(self))
 
@@ -62,20 +62,14 @@ class MountainBike(Bicycle):
 		add_spare = {'front_shock':self.front_shock, 'rear_shock': self.rear_shock}
 		return {**super().spares(), **add_spare}
 
+class RecumbentBike(Bicycle):
+	@staticmethod
+	def default_chain(self):
+		return '9-speed'
 
 if __name__ == '__main__':
 	# initialize a new bike
-	road_bike = RoadBike(
-	size = 'M',
-	tape_color = 'red' )
-
-	print(road_bike.tire_size) # => '23'
-	print(road_bike.chain) # => "10-speed"
-
-	mountain_bike = MountainBike(
-	size = 'S',
-	front_shock = 'Manitou',
-	rear_shock = 'Fox')
-
-	print(mountain_bike.tire_size) # => '2.1'
-	print(mountain_bike.chain) # => "10-speed"
+	bent = RecumbentBike()
+	print(bent)
+	# NameError: undefined local variable or method
+	#   `default_tire_size'
