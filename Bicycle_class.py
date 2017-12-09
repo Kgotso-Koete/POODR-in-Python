@@ -1,14 +1,24 @@
 '''
-Promoting size behavior to Bicycle superclass 
+Promoting chain and tire_size behavior to Bicycle superclass
 '''
 
 class Bicycle(object):
 	def __init__(self,**kwargs):
 		self.__size = kwargs['size']
+		self.__chain = kwargs.get('chain','10-speed')
+		self.__tire_size = kwargs.get('tire_size', 23)
 
 	@property
 	def size(self):
 		return self.__size
+
+	@property
+	def chain(self):
+		return self.__chain
+
+	@property
+	def tire_size(self):
+		return self.__tire_size
 
 class RoadBike(Bicycle):
 	def __init__(self,**kwargs):
@@ -20,7 +30,7 @@ class RoadBike(Bicycle):
 		return self.__tape_color
 
 	def spares(self):
-		return {'chain': '10-speed' , 'tire_size': '23' , 'tape_color': self.tape_color}
+		return {'chain': self.chain , 'tire_size': self.tire_size , 'tape_color': self.tape_color}
 
 class MountainBike(Bicycle):
 	def __init__(self,**kwargs):
@@ -47,7 +57,7 @@ if __name__ == '__main__':
 	size = 'M',
 	tape_color = 'red' )
 
-	print(road_bike.size)
+	print(road_bike.spares())
 	# => "M"
 
 	mountain_bike = MountainBike(
