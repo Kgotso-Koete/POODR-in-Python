@@ -1,12 +1,16 @@
 '''
-Promoting chain and tire_size behavior to Bicycle superclass
+Using staticmethod as default values that can be called in __init__ (before initializing)
 '''
 
 class Bicycle(object):
 	def __init__(self,**kwargs):
 		self.__size = kwargs['size']
-		self.__chain = kwargs.get('chain','10-speed')
-		self.__tire_size = kwargs.get('tire_size', 23)
+		self.__chain = kwargs.get('chain', self.default_chain(self))
+		self.__tire_size = kwargs.get('tire_size', self.default_tire_size(self))
+
+	@staticmethod
+	def default_chain(self):
+		return '10-speed'
 
 	@property
 	def size(self):
@@ -25,6 +29,10 @@ class RoadBike(Bicycle):
 		Bicycle.__init__(self,**kwargs) # <- RoadBike now MUST send
 		self.__tape_color = kwargs.get('tape_color', None)
 
+	@staticmethod
+	def default_tire_size(self):
+		return '23'
+
 	@property
 	def tape_color(self):
 		return self.__tape_color
@@ -37,6 +45,10 @@ class MountainBike(Bicycle):
 		Bicycle.__init__(self,**kwargs)
 		self.__front_shock = kwargs['front_shock']
 		self.__rear_shock = kwargs['rear_shock']
+
+	@staticmethod
+	def default_tire_size(self):
+		return '2.1'
 
 	@property
 	def front_shock(self):
@@ -57,13 +69,13 @@ if __name__ == '__main__':
 	size = 'M',
 	tape_color = 'red' )
 
-	print(road_bike.spares())
-	# => "M"
+	print(road_bike.tire_size) # => '23'
+	print(road_bike.chain) # => "10-speed"
 
 	mountain_bike = MountainBike(
 	size = 'S',
 	front_shock = 'Manitou',
 	rear_shock = 'Fox')
 
-	print(mountain_bike.size)
-	# NoMethodError: undefined method `size
+	print(mountain_bike.tire_size) # => '2.1'
+	print(mountain_bike.chain) # => "10-speed"
