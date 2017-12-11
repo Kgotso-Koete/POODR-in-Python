@@ -1,6 +1,6 @@
 '''
 Making Bike responsible for initializing variables
-**PLEASE NOTE, CONTAINS ERRORS
+**PLEASE NOTE, PREVIOUS ERROR FIXED
 '''
 
 class Bicycle(object):
@@ -8,10 +8,7 @@ class Bicycle(object):
 		self.__size = kwargs.get('size', None)
 		self.__chain = kwargs.get('chain', self.default_chain(self))
 		self.__tire_size = kwargs.get('tire_size', self.default_tire_size(self))
-
-	@classmethod
-	def post_initialize(self,**kwargs): # Bicycle both sends
-		return self.post_initialize(**kwargs)
+		self.post_initialize(**kwargs)
 
 	@staticmethod
 	def post_initialize(self,**kwargs): # And implements this
@@ -39,7 +36,6 @@ class Bicycle(object):
 class RoadBike(Bicycle):
 	def post_initialize(self,**kwargs): # RoadBike can optionally overide this
 		self.__tape_color = kwargs.get('tape_color', None)
-		# RoadBike can optionally overide this
 
 	@staticmethod
 	def default_tire_size(self):
