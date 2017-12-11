@@ -1,6 +1,5 @@
 '''
-Making Bike responsible for initializing variables
-**PLEASE NOTE, PREVIOUS ERROR FIXED
+Removing RoadBike's coupling to Bicycle's spares method
 '''
 
 class Bicycle(object):
@@ -31,7 +30,11 @@ class Bicycle(object):
 		return self.__tire_size
 
 	def spares(self):
-		return {'tire_size': self.tire_size, 'chain':self.chain}
+		parent_spares = {'tire_size': self.tire_size, 'chain':self.chain}
+		return {**parent_spares, **self.local_spares()}
+
+	def local_spares(self):
+		return {}
 
 class RoadBike(Bicycle):
 	def post_initialize(self,**kwargs): # RoadBike can optionally overide this
@@ -45,9 +48,9 @@ class RoadBike(Bicycle):
 	def tape_color(self):
 		return self.__tape_color
 
-	def spares(self):
-		add_spare = {'tape_color': self.tape_color}
-		return {**super().spares(), **add_spare}
+	def local_spares(self):
+		return {'tape_color': self.tape_color}
+
 
 if __name__ == '__main__':
 	# initialize
