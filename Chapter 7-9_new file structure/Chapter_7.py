@@ -17,14 +17,11 @@ class Schedule(object):
 
 ############## Page 150 ##############
 class ScheduleChecker_Mixin(object):
-    # Inject the Schedule and provide a default
-    def __init__(self,**kwargs):
-        self.__schedule = kwargs.get('schedule', Schedule())
-
-    # data hiding
     @property
     def schedule(self):
-        return self.__schedule
+        if not hasattr(self, '_schedule'):
+            self._schedule = Schedule()
+        return self._schedule
 
     # Return true if this bicycle is available during this (now Bicycle specific) interval.
     def can_be_scheduled(self,start_date, end_date):
@@ -37,7 +34,7 @@ class ScheduleChecker_Mixin(object):
 
     # Return the number of lead_days before a bicycle  can be scheduled.
     def lead_days(self):
-        return 1
+        return 0
 
 """
 if __name__ == '__main__':
