@@ -1,7 +1,5 @@
 '''
-There is now an abstract Parts class.
-Bicycle is composed of Parts .
-Parts has two subclasses, RoadBikeParts and MountainBikeParts.
+Bicycle sends spares to Parts , Parts sends needs_spare to each Part.
 '''
 
 # Bicycle is now responsible for three things: knowing its size , holding onto its Parts , and answering its spares
@@ -22,40 +20,35 @@ class Bicycle(object):
         return self.parts.spares()
 
 class Parts(object):
-    def __init__(self,**kwargs):
-        self.__chain = kwargs.get('chain', self.default_chain(self))
-        self.__tire_size = kwargs.get('tire_size', self.default_tire_size(self))
-        self.post_initialize(**kwargs)
-
-    # data hiding
-    @property
-    def chain(self):
-        return self.__chain
+    def __init__(self, parts=None):
+        self.__parts = parts
 
     @property
-    def tire_size(self):
-        return self.__tire_size
-
-    @staticmethod
-    def post_initialize(self,**kwargs): # And implements this
-        return None
+    def parts(self):
+        return self.__parts
 
     def spares(self):
-        parent_spares = {'tire_size': self.tire_size, 'chain':self.chain}
-        return {**parent_spares, **self.local_spares()}
+        return [part for part in self.parts if part.needs_spare]
 
-    def local_spares(self):
-        return {}
 
-    @staticmethod
-    def default_tire_size(self):
-        raise NotImplementedError("This",self.__class__.__name__,\
-         "can not respond to :",\
-         self.default_tire_size.__name__ )
+class Part(object):
+    def __init__(self,**kwargs):
+        self.__name = kwargs['name']
+        self.__description = kwargs['description']
+        self.__needs_spare = kwargs.get('needs_spare', True)
 
-    @staticmethod
-    def default_chain(self):
-        return '10-speed'
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def description(self):
+        return self.__description
+
+    @property
+    def needs_spare(self):
+        return self.__needs_spare
+
 
 class RoadBikeParts(Parts):
     def post_initialize(self,**kwargs):
@@ -93,26 +86,40 @@ class MountainBikeParts(Parts):
         return '2.1'
 
 if __name__ == '__main__':
-    # initialize
-    road_bike = Bicycle(
-    size = 'L',
-    parts = RoadBikeParts(tape_color = 'red'))
 
-    print(road_bike.size) # -> 'L'
+    #The following code creates a number of different parts and saves each in an instance variable.
+    chain = Part(name ='chain', description ='10-speed')
 
+    road_tire = Part(name = 'tire_size',  description = '23')
+
+    tape = Part(name ='tape_color', description = 'red')
+
+    mountain_tire = Part(name = 'tire_size',  description = '2.1')
+
+    rear_shock = Part(name = 'rear_shock', description = 'Fox')
+
+    front_shock = Part(name = 'front_shock', description = 'Manitou', needs_spare = False)
+
+    # testing instance of road_bike
+    road_bike = Bicycle(size = 'L', parts = Parts([chain, road_tire, tape]))
+    print(road_bike.size)    # -> 'L'
     print(road_bike.spares())
-    # -> {:tire_size   => "23",
-    #     :chain       => "10-speed",
-    #     :tape_color  => "red"}
+    # -> [#<Part:0x00000101036770
+    #         @name="chain",
+    #         @description="10-speed",
+    #         @needs_spare=true>,
+    #     #<Part:0x0000010102dc60
+    #         @name="tire_size",
+    #         etc ...
 
-    mountain_bike = Bicycle(
-    size = 'L',
-    parts = MountainBikeParts(front_shock = 'Manitou',
-    rear_shock = 'Fox'))
-
-    print(mountain_bike.size) # -> 'L'
-
+    # testing instance of mountain_bike
+    mountain_bike = Bicycle(size = 'L', parts = Parts([chain, mountain_tire, front_shock, rear_shock]))
+    print(mountain_bike.size)    # -> 'L'
     print(mountain_bike.spares())
-    # -> {:tire_size   => "2.1",
-    #     :chain       => "10-speed",
-    #     :rear_shock  => "Manitou"}
+    # -> [#<Part:0x00000101036770
+    #         @name="chain",
+    #         @description="10-speed",
+    #         @needs_spare=true>,
+    #     #<Part:0x0000010101b678
+    #         @name="tire_size",
+    #         etc ...
