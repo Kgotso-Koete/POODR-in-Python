@@ -1,5 +1,5 @@
 '''
-Bicycle now inherits from Mixin and any specified class
+Bicycle, Vehicle and Mechanic now inherit from Mixin and any specified class
 '''
 from datetime import date, timedelta
 import inspect
@@ -39,6 +39,15 @@ class Bicycle(ScheduleChecker_Mixin, object):
     def lead_days(self):
         return 1
 
+class Vehicle(ScheduleChecker_Mixin, object):
+    def lead_days(self):
+        return 3
+
+class Mechanic(ScheduleChecker_Mixin, object):
+    def lead_days(self):
+        return 4
+
+
 if __name__ == '__main__':
     # convert number inputs into dates
     starting = date(2015, 9, 4)
@@ -48,5 +57,17 @@ if __name__ == '__main__':
     b = Bicycle()
     print(b.can_be_scheduled(starting, ending))
     # This Bicycle is not scheduled
+    #   between 2015-09-03 and 2015-09-10
+    #  => true
+
+    v = Vehicle()
+    print(v.can_be_scheduled(starting, ending))
+    # This Vehicle is not scheduled
+    #   between 2015-09-03 and 2015-09-10
+    #  => true
+
+    m = Mechanic()
+    print(m.can_be_scheduled(starting, ending))
+    # This Mechanic is not scheduled
     #   between 2015-09-03 and 2015-09-10
     #  => true
