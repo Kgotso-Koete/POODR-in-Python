@@ -1,21 +1,18 @@
 '''
-Creating a ScheduleChecker Mixin(Class that other Classes can inherit from)
+Bicycle now inherits from Mixin and any specified class
 '''
 from datetime import date, timedelta
 import inspect
 
-"""
 class Schedule(object):
     def is_scheduled(self, schedulable, start_date, end_date):
         stack = inspect.stack()
         the_class = stack[1][0].f_locals["self"].__class__.__name__
         if True:
-            return print("This", the_class , "is not scheduled between ", start_date, " and ", end_date)
+            return print("This", the_class , "is not scheduled\n between", start_date, " and ", end_date)
         else:
             return False
-"""
 
-############## Page 150 ##############
 class ScheduleChecker_Mixin(object):
     @property
     def schedule(self):
@@ -36,7 +33,12 @@ class ScheduleChecker_Mixin(object):
     def lead_days(self):
         return 0
 
-"""
+############## Page 151 ##############
+# Bicycle now inherits from ScheduleChecker_Mixin and any other specified Class
+class Bicycle(ScheduleChecker_Mixin, object):
+    def lead_days(self):
+        return 1
+
 if __name__ == '__main__':
     # convert number inputs into dates
     starting = date(2015, 9, 4)
@@ -48,4 +50,3 @@ if __name__ == '__main__':
     # This Bicycle is not scheduled
     #   between 2015-09-03 and 2015-09-10
     #  => true
-"""
