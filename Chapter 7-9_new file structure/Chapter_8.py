@@ -5,7 +5,7 @@ Parts has two subclasses, RoadBikeParts and MountainBikeParts.
 '''
 
 # Bicycle is now responsible for three things: knowing its size , holding onto its Parts , and answering its spares
-class Bicycle:
+class Bicycle(object):
     def __init__(self, **kwargs):
         self.__size = kwargs['size']
         self.__parts = kwargs['parts']
@@ -19,7 +19,7 @@ class Bicycle:
         return self.__parts
 
     def spares(self):
-        return parts.spares()
+        return self.parts.spares()
 
 class Parts(object):
     def __init__(self,**kwargs):
@@ -93,5 +93,26 @@ class MountainBikeParts(Parts):
         return '2.1'
 
 if __name__ == '__main__':
-    # convert number inputs into dates
-    pass
+    # initialize
+    road_bike = Bicycle(
+    size = 'L',
+    parts = RoadBikeParts(tape_color = 'red'))
+
+    print(road_bike.size) # -> 'L'
+
+    print(road_bike.spares())
+    # -> {:tire_size   => "23",
+    #     :chain       => "10-speed",
+    #     :tape_color  => "red"}
+
+    mountain_bike = Bicycle(
+    size = 'L',
+    parts = MountainBikeParts(front_shock = 'Manitou',
+    rear_shock = 'Fox'))
+
+    print(mountain_bike.size) # -> 'L'
+
+    print(mountain_bike.spares())
+    # -> {:tire_size   => "2.1",
+    #     :chain       => "10-speed",
+    #     :rear_shock  => "Manitou"}
