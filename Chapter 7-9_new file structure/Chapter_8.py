@@ -1,8 +1,7 @@
 '''
-Bicycle sends spares to Parts , Parts sends needs_spare to each Part.
+Creating a Parts Factory
 '''
 
-# Bicycle is now responsible for three things: knowing its size , holding onto its Parts , and answering its spares
 class Bicycle(object):
     def __init__(self, **kwargs):
         self.__size = kwargs['size']
@@ -85,41 +84,47 @@ class MountainBikeParts(Parts):
     def default_tire_size(self):
         return '2.1'
 
+# source credit: https://github.com/foobacca/poodr-py/blob/70cb2c92dce917251cebb9e8364e3eb6c57f2ea0/bike.py
+def parts_factory(config, part_class = Part, parts_class = Parts):
+    return parts_class([
+        part_class(
+            name = part_config[0],
+            description = part_config[1],
+            needs_spare = part_config[2] if len(part_config) > 2 else True # checking for False as answer to 'needs spare?'
+        ) for part_config in config
+    ])
+
+# 2d array to describe bike composition of parts
+road_config = [
+    ['chain', '10-speed'],
+    ['tyre_size', '23'],
+    ['tape_colour', 'red'],
+]
+mountain_config = [
+    ['chain', '10-speed'],
+    ['tyre_size', '2.1'],
+    ['front_shock', 'Manitou', False],
+    ['rear_shock', 'Fox'],
+]
+
 if __name__ == '__main__':
 
-    #The following code creates a number of different parts and saves each in an instance variable.
-    chain = Part(name ='chain', description ='10-speed')
+    road_parts = parts_factory(road_config)
+    print(road_parts)
+    # -> [#<Part:0x00000101825b70
+    #       @name="chain",
+    #       @description="10-speed",
+    #       @needs_spare=true>,
+    #     #<Part:0x00000101825b20
+    #       @name="tire_size",
+    #          etc ...
 
-    road_tire = Part(name = 'tire_size',  description = '23')
-
-    tape = Part(name ='tape_color', description = 'red')
-
-    mountain_tire = Part(name = 'tire_size',  description = '2.1')
-
-    rear_shock = Part(name = 'rear_shock', description = 'Fox')
-
-    front_shock = Part(name = 'front_shock', description = 'Manitou', needs_spare = False)
-
-    # testing instance of road_bike
-    road_bike = Bicycle(size = 'L', parts = Parts([chain, road_tire, tape]))
-    print(road_bike.size)    # -> 'L'
-    print(road_bike.spares())
-    # -> [#<Part:0x00000101036770
-    #         @name="chain",
-    #         @description="10-speed",
-    #         @needs_spare=true>,
-    #     #<Part:0x0000010102dc60
-    #         @name="tire_size",
-    #         etc ...
-
-    # testing instance of mountain_bike
-    mountain_bike = Bicycle(size = 'L', parts = Parts([chain, mountain_tire, front_shock, rear_shock]))
-    print(mountain_bike.size)    # -> 'L'
-    print(mountain_bike.spares())
-    # -> [#<Part:0x00000101036770
-    #         @name="chain",
-    #         @description="10-speed",
-    #         @needs_spare=true>,
-    #     #<Part:0x0000010101b678
-    #         @name="tire_size",
-    #         etc ...
+    mountain_parts = parts_factory(mountain_config)
+    print(mountain_parts)
+    # -> [#<Part:0x0000010181ea28
+    #        @name="chain",
+    #        @description="10-speed",
+    #        @needs_spare=true>,
+    #     #<Part:0x0000010181e9d8
+    #        @name="tire_size",
+    #        etc ...
