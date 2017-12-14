@@ -1,5 +1,5 @@
 '''
-Creating a Parts Factory
+Refactoring PartsFactory and Part
 '''
 
 class Bicycle(object):
@@ -29,24 +29,27 @@ class Parts(object):
     def spares(self):
         return [part for part in self.parts if part.needs_spare]
 
+# source credit: https://github.com/foobacca/poodr-py/blob/e972e7f3fa33e6f8631fa86df8837da60f7ffefd/bike.py
+class PartsFactory(object):
+    class Part(object):
+        def __init__(self, **kwargs):
+            self.name = kwargs['name']
+            self.description = kwargs['description']
+            self.needs_spare = kwargs['needs_spare']
 
-class Part(object):
-    def __init__(self,**kwargs):
-        self.__name = kwargs['name']
-        self.__description = kwargs['description']
-        self.__needs_spare = kwargs.get('needs_spare', True)
+    @staticmethod
+    def build(config, parts_class=Parts):
+        return parts_class([
+            PartsFactory._create_part(part_config) for part_config in config
+        ])
 
-    @property
-    def name(self):
-        return self.__name
-
-    @property
-    def description(self):
-        return self.__description
-
-    @property
-    def needs_spare(self):
-        return self.__needs_spare
+    @staticmethod
+    def _create_part(part_config):
+        return PartsFactory.Part(
+            name=part_config[0],
+            description=part_config[1],
+            needs_spare=part_config[2] if len(part_config) > 2 else True
+        )
 
 
 class RoadBikeParts(Parts):
@@ -63,6 +66,7 @@ class RoadBikeParts(Parts):
     @staticmethod
     def default_tire_size(self):
         return '23'
+
 
 class MountainBikeParts(Parts):
     def post_initialize(self,**kwargs):
@@ -84,15 +88,6 @@ class MountainBikeParts(Parts):
     def default_tire_size(self):
         return '2.1'
 
-# source credit: https://github.com/foobacca/poodr-py/blob/70cb2c92dce917251cebb9e8364e3eb6c57f2ea0/bike.py
-def parts_factory(config, part_class = Part, parts_class = Parts):
-    return parts_class([
-        part_class(
-            name = part_config[0],
-            description = part_config[1],
-            needs_spare = part_config[2] if len(part_config) > 2 else True # checking for False as answer to 'needs spare?'
-        ) for part_config in config
-    ])
 
 # 2d array to describe bike composition of parts
 road_config = [
@@ -107,24 +102,17 @@ mountain_config = [
     ['rear_shock', 'Fox'],
 ]
 
+
 if __name__ == '__main__':
 
-    road_parts = parts_factory(road_config)
-    print(road_parts)
-    # -> [#<Part:0x00000101825b70
-    #       @name="chain",
-    #       @description="10-speed",
-    #       @needs_spare=true>,
-    #     #<Part:0x00000101825b20
-    #       @name="tire_size",
-    #          etc ...
+    road_parts = PartsFactory.build(road_config)
+    road_bike = Bicycle(
+                size='M',
+                parts=road_parts)
+    print(road_bike.size)
 
-    mountain_parts = parts_factory(mountain_config)
-    print(mountain_parts)
-    # -> [#<Part:0x0000010181ea28
-    #        @name="chain",
-    #        @description="10-speed",
-    #        @needs_spare=true>,
-    #     #<Part:0x0000010181e9d8
-    #        @name="tire_size",
-    #        etc ...
+    mountain_parts = PartsFactory.build(mountain_config)
+    mountain_bike = Bicycle(
+        size='L',
+        parts=mountain_parts)
+    print(mountain_bike.size)
