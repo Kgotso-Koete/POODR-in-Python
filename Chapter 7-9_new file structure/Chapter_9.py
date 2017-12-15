@@ -1,5 +1,5 @@
 '''
-Applying unit tests to Wheel
+Applying unit tests to Gear too
 '''
 import unittest
 
@@ -46,15 +46,22 @@ class Gear:
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
-	def gear_inches(self, diameter):
-		return self.ratio() * Wheel(rim, tire).diameter()
+	def gear_inches(self):
+		return self.ratio() * Wheel(self.rim, self.tire).diameter()
 
 
-class TestUM(unittest.TestCase):
+class WheelTest(unittest.TestCase):
 
 	def test_calculates_diameter(self):
 		wheel = Wheel(26, 1.5)
-		self.assertTrue(wheel.diameter() == 29)
+		self.assertAlmostEqual(wheel.diameter(), 29, delta = 1.5)
+
+class GearTest(unittest.TestCase):
+
+	def test_calculates_gear_inches(self):
+		gear =  Gear(chainring = 52, cog = 11, rim = 26, tire = 1.5 )
+		self.assertAlmostEqual(gear.gear_inches(), 137.1, delta = 0.01)
+
 
 if __name__ == '__main__':
 	unittest.main()
