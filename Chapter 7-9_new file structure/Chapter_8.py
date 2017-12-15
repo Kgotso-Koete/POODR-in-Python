@@ -1,5 +1,5 @@
 '''
-Refactoring PartsFactory and Part
+Tying up Chapter 8
 '''
 
 class Bicycle(object):
@@ -17,6 +17,7 @@ class Bicycle(object):
 
     def spares(self):
         return self.parts.spares()
+
 
 class Parts(object):
     def __init__(self, parts=None):
@@ -37,19 +38,22 @@ class PartsFactory(object):
             self.description = kwargs['description']
             self.needs_spare = kwargs['needs_spare']
 
+        def __str__(self):
+            uni = "%s: %s" % (self.name, self.description)
+            if self.needs_spare:
+                uni += " (needs spare)"
+            return uni
+
     @staticmethod
-    def build(config, parts_class=Parts):
-        return parts_class([
-            PartsFactory._create_part(part_config) for part_config in config
-        ])
+    def build(config, parts_class = Parts):
+        return parts_class([PartsFactory._create_part(part_config) for part_config in config])
 
     @staticmethod
     def _create_part(part_config):
         return PartsFactory.Part(
-            name=part_config[0],
-            description=part_config[1],
-            needs_spare=part_config[2] if len(part_config) > 2 else True
-        )
+            name = part_config[0],
+            description = part_config[1],
+            needs_spare = part_config[2] if len(part_config) > 2 else True)
 
 
 class RoadBikeParts(Parts):
@@ -88,6 +92,9 @@ class MountainBikeParts(Parts):
     def default_tire_size(self):
         return '2.1'
 
+# source credit: https://github.com/foobacca/poodr-py/blob/e972e7f3fa33e6f8631fa86df8837da60f7ffefd/bike.py
+def spares_to_string(spares):
+    return '[' + ', '.join([str(s) for s in spares]) + ']'
 
 # 2d array to describe bike composition of parts
 road_config = [
@@ -107,12 +114,14 @@ if __name__ == '__main__':
 
     road_parts = PartsFactory.build(road_config)
     road_bike = Bicycle(
-                size='M',
-                parts=road_parts)
-    print(road_bike.size)
+        size ='M',
+        parts = road_parts)
+    print (road_bike.size)
+    print (spares_to_string(road_bike.spares()))
 
     mountain_parts = PartsFactory.build(mountain_config)
     mountain_bike = Bicycle(
-        size='L',
-        parts=mountain_parts)
-    print(mountain_bike.size)
+        size ='L',
+        parts = mountain_parts)
+    print (mountain_bike.size)
+    print (spares_to_string(mountain_bike.spares()))
