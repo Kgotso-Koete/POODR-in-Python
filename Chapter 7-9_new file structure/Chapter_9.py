@@ -1,5 +1,6 @@
 '''
-Applying unit tests to Gear too
+Gear now accepts objects with diameter() method
+Refactoring Gear unit test for Gear
 '''
 import unittest
 
@@ -25,8 +26,7 @@ class Gear:
 	def __init__(self, **kwargs):
 		self.__chainring = kwargs['chainring']
 		self.__cog = kwargs['cog']
-		self.__rim = kwargs['rim']
-		self.__tire = kwargs['tire']
+		self.__wheel = kwargs['wheel']
 
 	@property
 	def chainring(self):
@@ -36,18 +36,15 @@ class Gear:
 	def cog(self):
 		return self.__cog
 	@property
-	def rim(self):
-		return self.__rim
-
-	@property
-	def tire(self):
-		return self.__tire
+	def wheel(self):
+		return self.__wheel
 
 	def ratio(self):
 		return self.chainring / float(self.cog)
 
+	# The object in the'wheel' variable plays the 'Diameterizable' role.
 	def gear_inches(self):
-		return self.ratio() * Wheel(self.rim, self.tire).diameter()
+		return self.ratio() * self.wheel.diameter()
 
 
 class WheelTest(unittest.TestCase):
@@ -59,7 +56,7 @@ class WheelTest(unittest.TestCase):
 class GearTest(unittest.TestCase):
 
 	def test_calculates_gear_inches(self):
-		gear =  Gear(chainring = 52, cog = 11, rim = 26, tire = 1.5 )
+		gear =  Gear(chainring = 52, cog = 11, wheel = Wheel(26, 1.5))
 		self.assertAlmostEqual(gear.gear_inches(), 137.1, delta = 0.01)
 
 
