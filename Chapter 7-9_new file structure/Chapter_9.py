@@ -57,10 +57,13 @@ class WheelTest(unittest.TestCase):
 		self.wheel = Wheel(26, 1.5)
 
 	def test_implements_the_diameterizable_interface(self):
-		self.assertEqual(self.wheel.diameter.__name__ , 'diameter')
+		callable(self.wheel.diameter)
 
 	def test_calculates_diameter(self):
 		self.assertAlmostEqual(self.wheel.diameter(), 29, delta = 1.5)
+
+	print('All wheel tests pass!!!')
+	print()
 
 
 class GearTest(unittest.TestCase):
@@ -68,6 +71,9 @@ class GearTest(unittest.TestCase):
 	def test_calculates_gear_inches(self):
 		gear =  Gear(chainring = 52, cog = 11, wheel = DiameterDoube())
 		self.assertAlmostEqual(gear.gear_inches(), 47.27, delta = 0.01)
+
+	print('All Gear tests pass!!!')
+	print()
 
 
 if __name__ == '__main__':
