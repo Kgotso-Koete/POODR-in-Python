@@ -1,5 +1,5 @@
 '''
-Creating a fake object, or test double , to play the Diameterizable role.
+Testing that Wheel object reponds to diameter() method
 '''
 import unittest
 
@@ -53,10 +53,15 @@ class DiameterDoube(object):
 
 
 class WheelTest(unittest.TestCase):
+	def setUp(self):
+		self.wheel = Wheel(26, 1.5)
+
+	def test_implements_the_diameterizable_interface(self):
+		self.assertEqual(self.wheel.diameter.__name__ , 'diameter')
 
 	def test_calculates_diameter(self):
-		wheel = Wheel(26, 1.5)
-		self.assertAlmostEqual(wheel.diameter(), 29, delta = 1.5)
+		self.assertAlmostEqual(self.wheel.diameter(), 29, delta = 1.5)
+
 
 class GearTest(unittest.TestCase):
 
@@ -66,4 +71,4 @@ class GearTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-	unittest.main()
+	unittest.main() # execute init tests
