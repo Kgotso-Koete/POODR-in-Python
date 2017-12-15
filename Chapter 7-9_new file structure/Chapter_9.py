@@ -1,6 +1,5 @@
 '''
-Gear now accepts objects with diameter() method
-Refactoring Gear unit test for Gear
+Creating a fake object, or test double , to play the Diameterizable role.
 '''
 import unittest
 
@@ -47,6 +46,12 @@ class Gear:
 		return self.ratio() * self.wheel.diameter()
 
 
+# create a player of the Diameterizable role
+class DiameterDoube(object):
+	def diameter(self):
+		return 10
+
+
 class WheelTest(unittest.TestCase):
 
 	def test_calculates_diameter(self):
@@ -56,8 +61,8 @@ class WheelTest(unittest.TestCase):
 class GearTest(unittest.TestCase):
 
 	def test_calculates_gear_inches(self):
-		gear =  Gear(chainring = 52, cog = 11, wheel = Wheel(26, 1.5))
-		self.assertAlmostEqual(gear.gear_inches(), 137.1, delta = 0.01)
+		gear =  Gear(chainring = 52, cog = 11, wheel = DiameterDoube())
+		self.assertAlmostEqual(gear.gear_inches(), 47.27, delta = 0.01)
 
 
 if __name__ == '__main__':
